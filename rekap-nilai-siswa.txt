@@ -1,4 +1,14 @@
 Siswa #1
-Nama 	 :Yanto
+Nama 			: Hasuudngan
+Kelas 			: x
+Nilai Informatika 	 :80
+Nilai DKK 		: 90
+Nilai Rata-Rata 	: 85
+Predikat 		: B
 Siswa #2
-Nama 	 :DENIS
+Nama 			: test
+Kelas 			: x
+Nilai Informatika 	 :80
+Nilai DKK 		: 90
+Nilai Rata-Rata 	: 85
+Predikat 		: B

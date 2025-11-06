@@ -92,7 +92,23 @@ public class Main {
 				// membuat urutan siswa 
 				System.out.println("siswa ke #" + (index++ ));
 				// menampilkan setiap nama siswa
-				System.out.println("Nama \t " + objectSiswa.getNama());
+				System.out.println("Nama \t\t\t: " + objectSiswa.getNama());
+				
+				// menampilkan setiap kelas
+				System.out.println("Kelas \t\t\t: " + objectSiswa.getKelas());
+				
+				// menampilkan nilai informatika
+				System.out.println("Nilai Informatika \t: " + objectSiswa.getNilaiInformatika());
+				
+				// menampilkan nilai dkk
+				System.out.println("Nilai DKK \t\t: " + objectSiswa.getNilaiDkk());
+				
+				// menampilkan nilai rata-rata
+				System.out.println("Nilai Rata-Rata: \t: " + objectSiswa.getNilaiRataRata());
+				
+				// menampilkan nilai predikat
+				System.out.println("Predikat \t\t: " + objectSiswa.getPredicate());
+				System.out.println();
 			}
 			
 			// mengisi data kedalam file yang sudah dibuat
@@ -102,12 +118,22 @@ public class Main {
 			for(Siswa murid : listNilaiSiswa) { 
 				// mencetak isi konten kefile perbaris
 				penForWrite.write("Siswa #" + (urutanSiswa++) + "\n");
-				penForWrite.write("Nama \t :" + murid.getNama() + "\n");
+				penForWrite.write("Nama \t\t\t: " + murid.getNama() + "\n");
+				
 				//tampilkan nama kelas
+				penForWrite.write("Kelas \t\t\t: " + murid.getKelas() + "\n");
+				
 				// nilai informatika
+				penForWrite.write("Nilai Informatika \t :" + murid.getNilaiInformatika() + "\n");
+				
 				// nilai dkk
+				penForWrite.write("Nilai DKK \t\t: " + murid.getNilaiDkk() + "\n");
+				
 				// nilai rata
+				penForWrite.write("Nilai Rata-Rata \t: " + murid.getNilaiRataRata() + "\n");
+				
 				// nilai grade
+				penForWrite.write("Predikat \t\t: " + murid.getPredicate() + "\n");
 			}
 			penForWrite.close();
 			System.out.println("");

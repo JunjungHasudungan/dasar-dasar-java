@@ -58,13 +58,20 @@ public class Siswa {
 		// melakukan pengecekan melalui validasi 
 		if(total_rata_rata > 95) { 
 			this.grade = "A+";
+		}else if(total_rata_rata > 90) {
+			this.grade = "A";
+		}else if(total_rata_rata > 85) {
+			this.grade = "B+";
+		}else if(total_rata_rata > 80) {
+			this.grade = "B";
+		}else if(total_rata_rata > 75) {
+			this.grade = "C+";
+		}else if(total_rata_rata > 70) {
+			this.grade = "C";
+		}else {
+			this.grade = "F";
 		}
-		// > 90 GRADE A
-		// > 85 GRADE B+
-		// > 80 GRADE B
-		// > 75 GRADE C+ 
-		// > 70 GRADE C
-		// SELAIN ITU F  
+		
 		return this.grade;
 	}
 }
