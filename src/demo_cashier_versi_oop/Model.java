@@ -3,15 +3,16 @@ package demo_cashier_versi_oop;
 import java.io.*;
 import java.util.*;
 
-public abstract class Model {
+public abstract class Model implements ProductContractService {
 
-    protected String fileName; // setiap model punya file db sendiri
+	// setiap model class memiliki nama file db sendiri
+    protected String fileName; 
 
     public Model(String fileName) {
         this.fileName = fileName;
     }
 
-    // Membaca seluruh baris file TXT
+    // Membaca seluruh baris file txt
     protected List<String> readAll() {
         List<String> list = new ArrayList<>();
 
@@ -45,23 +46,90 @@ public abstract class Model {
         }
     }
 
-    // Delete berdasarkan ID / kode
-    public boolean delete(String code) {
-        List<String> dataList = readAll();
-        boolean found = false;
+    @Override //  menggunakan kembali fungsi dari create dari ProductContractService
+    public boolean create(Product product) {
+    	List<String> dataList = readAll();
 
-        Iterator<String> it = dataList.iterator();
-        while (it.hasNext()) {
-            String row = it.next();
-            if (row.startsWith(code + ",")) {
-                it.remove();
-                found = true;
+        // Cek duplikasi kode
+        for (String row : dataList) {
+            if (row.startsWith(product.getKode() + ",")) {
+                System.out.println("Kode sudah ada!");
+                return false;
             }
         }
 
-        if (found) {
-            writeAll(dataList);
-        }
-        return found;
+        String newRow = product.getKode() + "," + product.getNama() + "," + product.getHarga();
+        dataList.add(newRow);
+        writeAll(dataList);
+        return true;	
+    }
+    
+    @Override
+    public Product findBy(String kode) {
+    	List<String> dataList = readAll();
+    	 
+    	for (String row : dataList) {
+             String[] dt = row.split(",");
+             if (dt[0].equals(kode)) {
+                 return new Product(dt[0], dt[1], Integer.parseInt(dt[2]));
+             }
+         }
+    	 return null;
+    }
+    
+    @Override
+    public boolean update(Product product) {
+    	 List<String> dataList = readAll();
+         boolean found = false;
+
+         for (int i = 0; i < dataList.size(); i++) {
+             String[] dt = dataList.get(i).split(",");
+
+             if (dt[0].equals(product.getKode())) {
+                 dataList.set(i, product.getKode() + "," + product.getNama() + "," + product.getHarga());
+                 found = true;
+                 break;
+             }
+         }
+
+         if (found) writeAll(dataList);
+         return found;
+    }
+    
+    @Override
+    public boolean delete(String kode) {
+    	 List<String> dataList = readAll();
+         boolean found = false;
+
+         Iterator<String> it = dataList.iterator();
+         while (it.hasNext()) {
+             String row = it.next();
+             if (row.startsWith(kode + ",")) {
+                 it.remove();
+                 found = true;
+             }
+         }
+
+         if (found) {
+             writeAll(dataList);
+         }
+         return found;
+    }
+    
+    @Override
+    public List<Product> all() {
+    	 List<String> rows = readAll();
+         List<Product> products = new ArrayList<>();
+
+         for (String row : rows) {
+             String[] parts = row.split(",");
+             if (parts.length == 3) {
+                 String k = parts[0];
+                 String n = parts[1];
+                 int h = Integer.parseInt(parts[2]);
+                 products.add(new Product(k, n, h));
+             }
+         }
+         return products;
     }
 }

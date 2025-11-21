@@ -5,9 +5,13 @@ import java.util.*;
 public class Main {
 	public static boolean confirmation(String message) { 
 		// membuat argument untuk bertanya
-		 Scanner terminalInput = new Scanner(System.in);
+		Scanner terminalInput = new Scanner(System.in);
+		
+		// menangkap inputan berdasarkan pesan yang mau ditampilkan
 		System.out.print("\n" + message + "(y|n)?");
 		String pilihanUser = terminalInput.next();
+		
+		// pengecekan inputan 
 		while(! pilihanUser.equalsIgnoreCase("y") && ! pilihanUser.equalsIgnoreCase("n")) { 
 			System.err.println("Pilihan anda bukan y atau n");
 			System.out.print("\n" + message + " y|n");
@@ -59,13 +63,13 @@ public class Main {
 	
 	public static void updateProduct(Product productModel, Scanner input) {
 	    System.out.print("Masukkan kode yang akan diubah: ");
-	    String kode = input.nextLine();
+	    String kode = input.next();
 
 	    System.out.print("Nama baru: ");
-	    String nama = input.nextLine();
+	    String nama = input.next();
 
 	    System.out.print("Harga baru: ");
-	    int harga = Integer.parseInt(input.nextLine());
+	    int harga = Integer.parseInt(input.next());
 
 	    Product p = new Product(kode, nama, harga);
 
@@ -76,7 +80,7 @@ public class Main {
 	
 	public static void deleteProduct(Product productModel, Scanner input) {
 	    System.out.print("Masukkan kode yang akan dihapus: ");
-	    String kode = input.nextLine();
+	    String kode = input.next();
 
 	    boolean deleted = productModel.delete(kode);
 
@@ -90,9 +94,9 @@ public class Main {
 	    System.out.println("\n=== CARI PRODUK ===");
 
 	    System.out.print("Masukkan kode produk: ");
-	    String kodeCari = input.nextLine();
+	    String kode = input.next();
 
-	    Product product = productModel.find(kodeCari);
+	    Product product = productModel.findBy(kode);
 
 	    if (product != null) {
 
