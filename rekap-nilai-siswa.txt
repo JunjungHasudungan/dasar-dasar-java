@@ -1,14 +1,14 @@
 Siswa #1
-Nama 			: Hasuudngan
+Nama 			: Asep
 Kelas 			: x
 Nilai Informatika 	 :80
 Nilai DKK 		: 90
 Nilai Rata-Rata 	: 85
 Predikat 		: B
 Siswa #2
-Nama 			: test
+Nama 			: Radot
 Kelas 			: x
-Nilai Informatika 	 :80
-Nilai DKK 		: 90
-Nilai Rata-Rata 	: 85
-Predikat 		: B
+Nilai Informatika 	 :97
+Nilai DKK 		: 80
+Nilai Rata-Rata 	: 88
+Predikat 		: B+

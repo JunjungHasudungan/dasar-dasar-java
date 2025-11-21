@@ -4,7 +4,6 @@ public class Siswa {
 	// PEMBUATAN PROPERTI GLOBAL TENTANG SISWA
 	public String nama_siswa;
 	public String kelas;
-	public int umur;
 	public int nilai_dkk;
 	public int nilai_informatika;
 	public int nilai_rata_rata;
@@ -82,7 +81,24 @@ public class Siswa {
 
 
 
+//membuat fungsi getNama
 
+	// membuat fungsi setNilaiDkk
+	
+	// membuat fungsi setKelas
+
+	// membuat fungsi getKelas
+	
+	// membuat fungsi getNilaiDkk
+
+	// membuat fungsi getNilaiInformatika
+
+	// membuat fungsi setNilaiInformatika
+	
+	// fungsi untuk mencari nilai rata-tata 
+	
+	
+	// membuat fungsi mengecek grade dari rata-rata
 
 
 

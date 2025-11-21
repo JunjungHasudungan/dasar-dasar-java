@@ -7,43 +7,64 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.*;
+import java.util.List; // penambahan list untuk data array
+
+import java.util.StringTokenizer;
 
 public class Main {
 
 	static Scanner terminalInput = new Scanner(System.in);
 	
-	public static void tampilkanData() throws IOException {
-		// melakukan registrasi Object FileReader
-		FileReader fileInput;
-		BufferedReader bufferInput;
-		
-		try {
-			
-			fileInput = new FileReader("database.txt");
-            bufferInput = new BufferedReader(fileInput);
-            
-		}catch(Exception error) {
-			System.out.println("Databaase tidak ditemukan..");
-			return;
-		}
-		  String baris;
-          System.out.println("===============================================");
-          System.out.printf("%-15s %-20s %-10s%n", "Kode Produk", "Nama Produk", "Harga");
-          System.out.println("===============================================");
-          
-//          bufferInput.readLine();
+	private static List<String> readAll() throws IOException {
+	    File file = new File("database.txt");
+	    List<String> list = new ArrayList<>();
 
-          while ((baris = bufferInput.readLine()) != null) {
-              String[] data = baris.split(",");
+	    if (!file.exists()) return list;
 
-              if (data.length == 3) {
-                  System.out.printf("%-15s %-20s %-10s%n", data[0].trim(), data[1].trim(), data[2].trim());
-              }
-          }
+	    BufferedReader br = new BufferedReader(new FileReader(file));
+	    String line;
 
-          System.out.println("===============================================");
+	    while ((line = br.readLine()) != null) {
+	        if (!line.trim().isEmpty())
+	            list.add(line.trim());
+	    }
+	    br.close();
+	    return list;
 	}
 	
+	private static void writeAll(List<String> data) throws IOException {
+	    BufferedWriter bw = new BufferedWriter(new FileWriter("database.txt"));
+	    for (String line : data) {
+	        bw.write(line);
+	        bw.newLine();
+	    }
+	    bw.close();
+	}
+	
+	public static void tampilkanData() throws IOException {
+	    List<String> dataList = readAll();
+
+	    System.out.println("===============================================");
+	    System.out.printf("%-15s %-20s %-10s%n", "Kode Produk", "Nama Produk", "Harga");
+	    System.out.println("===============================================");
+
+	    if (dataList.isEmpty()) {
+	        System.out.println("Belum ada data produk.");
+	        System.out.println("===============================================");
+	        return;
+	    }
+
+	    for (String baris : dataList) {
+	        String[] data = baris.split(",");
+	        if (data.length == 3) {
+	            System.out.printf("%-15s %-20s %-10s%n",
+	                    data[0].trim(), data[1].trim(), data[2].trim());
+	        }
+	    }
+	    System.out.println("===============================================");
+	}
+
 	public static boolean confirmation(String message) {
 		Scanner terminalInput = new Scanner(System.in);
 		System.out.print("\n" + message + "(y|n)? ");
@@ -56,55 +77,116 @@ public class Main {
 		return pilihanUser.equalsIgnoreCase("y");
 	}
 	
-	public static void tambahDataProduct() {
-		ArrayList<Product> arrayProduct = new ArrayList<>();
-		
-		System.out.print("Jumlah Product \t: ");
-		int jumlah_product = terminalInput.nextInt();
-		
-		for(int index = 0; index < jumlah_product; index++) {
-			System.out.println("Produk #" + (index + 1));
-			// memasukkan kode produk
-			System.out.print("Kode Product: ");
-			String kodeProduct = terminalInput.next();
-			
-			
-			// memasukakan nama product
-			System.out.print("Nama Product: ");
-			String namaProduct = terminalInput.next();
-			
-			// memasukkan harga product
-			System.out.print("Harga Produk: ");
-			int hargaProduct = terminalInput.nextInt();
-			
-			// masukkkan kedalam array List
-			
-			Product product = new Product(kodeProduct, namaProduct, hargaProduct);
-			arrayProduct.add(product);
-			System.out.println();
-		}
-		
-		try {
+	public static void tambahDataProduct() throws IOException {
+	    List<String> dataList = readAll();
 
-			File fileOutput = new File("database.txt");
-            FileWriter pena = new FileWriter(fileOutput, true);
-			
-    		// menulis kedalam file database
-            for(Product produk : arrayProduct) {
-            	pena.write("\n" + produk.getKodeProduct() +"," + produk.getNamaProduct() + "," + produk.getHargaProduct());
-            }
-            
-            pena.close();
-            System.out.println("Berhasil menambah data produk");
-		}catch(IOException error) {
-			System.out.println("");
-			error.printStackTrace();
-		}
-		
+	    System.out.print("Jumlah Product: ");
+	    int jumlah = terminalInput.nextInt();
+
+	    for (int i = 0; i < jumlah; i++) {
+	        System.out.println("Produk #" + (i + 1));
+
+	        System.out.print("Kode Product: ");
+	        String kode = terminalInput.next();
+
+	        System.out.print("Nama Product: ");
+	        String nama = terminalInput.next();
+
+	        System.out.print("Harga Produk: ");
+	        String harga = terminalInput.next();
+
+	        dataList.add(kode + "," + nama + "," + harga);
+	    }
+
+	    writeAll(dataList);
+	    System.out.println("Berhasil menambah data produk.");
 	}
+
 	
-	public static void cariDataProduct() {
-		System.out.println("MENCARI DARA PRODUCT");
+	private static void cariDataProduct() throws IOException {
+	    List<String> dataList = readAll();
+	    if (dataList.isEmpty()) {
+	        System.out.println("Database kosong.");
+	        return;
+	    }
+
+	    terminalInput.nextLine(); // menghapus newline sebelumnya
+	    System.out.print("Masukan Kode Produk: ");
+	    String keyword = terminalInput.nextLine().trim();
+
+	    // Buat keyword lowercase sekali saja
+	    String keywordLower = keyword.toLowerCase();
+
+	    boolean found = false;
+
+	    System.out.println("===============================================");
+	    System.out.printf("%-15s %-20s %-10s%n", "Kode Produk", "Nama Produk", "Harga");
+	    System.out.println("===============================================");
+
+	    for (String baris : dataList) {
+	        // case-insensitive: bandingkan versi lowercase keduanya
+	        if (baris.toLowerCase().contains(keywordLower)) {
+	            found = true;
+	            String[] d = baris.split(",");
+
+	            if (d.length == 3) {
+	                System.out.printf("%-15s %-20s %-10s%n",
+	                    d[0].trim(),
+	                    d[1].trim(),
+	                    d[2].trim()
+	                );
+	            }
+	        }
+	    }
+
+	    if (!found) {
+	        System.out.println("Data [" + keyword + "] tidak ditemukan.");
+	    }
+
+	    System.out.println("===============================================");
+	}	
+	
+	private static void deleteData() throws IOException {
+	    List<String> dataList = readAll();
+	    if (dataList.isEmpty()) {
+	        System.out.println("Database kosong.");
+	        return;
+	    }
+
+	    tampilkanData();
+
+	    System.out.print("\nMasukan KODE produk yang akan dihapus: ");
+	    String kode = terminalInput.next().toLowerCase();
+
+	    List<String> newList = new ArrayList<>();
+	    boolean found = false;
+
+	    for (String baris : dataList) {
+	        String[] d = baris.split(",");
+
+	        if (d[0].trim().toLowerCase().equals(kode)) {
+	            found = true;
+
+	            System.out.println("\nData yang akan dihapus:");
+	            System.out.println("Kode  : " + d[0]);
+	            System.out.println("Nama  : " + d[1]);
+	            System.out.println("Harga : " + d[2]);
+
+	            if (!confirmation("Apakah anda yakin ingin menghapus data ini?")) {
+	                newList.add(baris); // batal hapus
+	            }
+	        } else {
+	            newList.add(baris);
+	        }
+	    }
+
+	    if (!found) {
+	        System.out.println("Produk tidak ditemukan.");
+	        return;
+	    }
+
+	    writeAll(newList);
+	    System.out.println("Data berhasil dihapus.");
 	}
 	
 	public static void main(String[] args) throws IOException {
@@ -145,6 +227,16 @@ public class Main {
 				case "3":
 					System.out.println("Tambah Produk");
 					tambahDataProduct();
+				break;
+				
+				case "4":
+					System.out.println("Tambah Produk");
+					tambahDataProduct();
+				break;
+				
+				case "5":
+					System.out.println("Hapus Produk");
+					deleteData();
 				break;
 				
 				default:

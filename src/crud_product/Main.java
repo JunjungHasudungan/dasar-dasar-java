@@ -25,10 +25,88 @@ public class Main {
 	// inisialisasi class objek terminalInput
 	public static Scanner terminalInput = new Scanner(System.in);
 	
+	// membuat fungsi konfirmasi lanjut atau tidak
+	public static boolean confirmation(String message) { 
+		// membuat argument untuk bertanya
+		System.out.print("\n" + message + "(y|n)?");
+		String pilihanUser = terminalInput.next();
+		while(! pilihanUser.equalsIgnoreCase("y") && ! pilihanUser.equalsIgnoreCase("n")) { 
+			System.err.println("Pilihan anda bukan y atau n");
+			System.out.print("\n" + message + " y|n");
+			pilihanUser = terminalInput.next();
+		}
+		// mengembalikan nilai y
+		return pilihanUser.equalsIgnoreCase("y");
+	} 
+	
+	// membuat fungsi tambah data product
+	public static void tambahDataProduct() throws IOException { 
+		// membuat array objek dari class Produk
+		ArrayList < Produk > listProduk = new ArrayList<>();
+		
+		// memberikan argument pertanyaan tentang jumlah produk
+		System.out.print("Jumlah Produk \t: ");
+		
+		// menangkap nilai inputan tentang jumlah produk
+		int jumlah_produk = terminalInput.nextInt();
+		
+		// melakukan perulangan untuk mengisi data produk
+		for( int index = 0; index < jumlah_produk; index++ ) { 
+			
+			// memberikan argument pertanyaan tentang nama produk
+			System.out.print("Nama Produk \t: ");
+			
+			// menangkap nilai inputan tentang jumlah produk
+			String nama_produk = terminalInput.next();
+			
+			// memberikan argument pertanyaan tentang nama produk
+			System.out.print("Kode Produk \t: ");
+			
+			// menangkap nilai inputan tentang kode produk
+			String kode_produk = terminalInput.next();
+			
+			// memberikan argument pertanyaan tentang nama produk
+			System.out.print("Harga Produk \t: ");
+			
+			// menangkap nilai inputan tentang jumlah produk
+			int harga_produk = terminalInput.nextInt();
+			
+			System.out.println();
+			
+			// mengisi data produk kedalam objek produk
+			Produk objekProduk = new Produk(kode_produk, nama_produk, harga_produk);
+			
+			// menambahkan siobjek arrayList kedalam objek produk
+			listProduk.add(objekProduk);
+			System.out.println();
+		} 
+		// melakukan try and catch file yang digunakan
+		try { 
+			// mengambil file untuk dibaca
+			File fileInput = new File("database-product.txt");
+			FileWriter pena = new FileWriter(fileInput, true);
+			
+			// menulis data produk mengunakan perulangan foreach 
+			for(Produk objekProduk : listProduk) { 
+				// menulis kedalam file 
+				pena.write("\n" + objekProduk.getKode() + "," + 
+				objekProduk.getNama() + "," + objekProduk.getHarga());
+			}
+			// menutup pena
+			pena.close();
+			System.out.println("Data Berhasil ditambahkan..");
+			
+		} catch(Exception error) { 
+			System.out.println("DATABASE PRODUCT TIDAK DITEMUKAN");
+			return;
+		}
+	}
+	
 	// membuat fungsi menampilkan data produk
 	public static void tampilkanDataProduct() throws IOException { 
 		// melakukan instansiasi objek fileReader
 		FileReader fileInput;
+		// melakukan instansiasi objek buffer
 		BufferedReader bufferInput;
 		
 		try { 
@@ -41,8 +119,9 @@ public class Main {
 			return;
 		}
 		
-		// melakukan setting table untuk data produk
+		// variable menampung data perbaris
 		String baris;
+		
 		System.out.println("====================================================================");
 		System.out.printf("%-15s %-20s %-10s%n", "Kode Product", "Nama Product", "Harga Product");
 		System.out.println("====================================================================");
@@ -61,11 +140,8 @@ public class Main {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		// TODO Auto-generated method stub
+		// pembuatan variable local bertipe boolean
 		boolean isLanjutkan = true;
-		
-		// membuat objek arrayList dari produk
-		ArrayList< Produk > listProduct =  new ArrayList<>();
 		
 		// membuat objek file 
 		File fileOutput = new File("database-product.txt");
@@ -87,14 +163,18 @@ public class Main {
 			System.out.println("\t 3. Tambah data produk");
 			System.out.println("\t 4. Ubah data produk");
 			System.out.println("\t 5. Hapus data produk");
+			
+			// memberikan argument pertanyaan kepada user
 			System.out.print("Pilih menu berapa? ");
+			
+			// menangkap nilai dari inputan user 
 			String jawaban = terminalInput.next();
 			
-			// membuat pilihan menggunakan switch-case
+			// membuat pilihan menggunakan switch-case berdasarkan inputan user
 			switch(jawaban) { 
 			case "1":
 				System.out.println("LIHAT LIST PRODUK");
-				// fungsi untuk melihat seluruh product
+				// menggunakan fungsi tampilkanDataProduct untuk melihat seluruh product
 				tampilkanDataProduct();
 			break;
 			
@@ -104,8 +184,9 @@ public class Main {
 			break;
 			
 			case "3":
-				System.out.println("LIHAT LIST PRODUK");
-				// fungsi untuk melihat seluruh product
+				System.out.println("TAMBAH DATA PRODUK");
+				// fungsi untuk menambah product product
+				tambahDataProduct();
 			break;
 			
 			case "4":
@@ -124,6 +205,7 @@ public class Main {
 			}
 			
 			// fungsi untuk konfirmasi
+			isLanjutkan = confirmation("Apakah ingin melanjutkan");
 		} 
 	}
 

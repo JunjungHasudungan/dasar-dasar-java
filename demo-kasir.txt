@@ -1,0 +1,5 @@
+P001,Nasi Goreng,15000
+P003,Sate Ayam,20000
+P002,TEST,500
+p0002,tqw,500
+susu,susu,900
