@@ -91,3 +91,5 @@ public class Product extends Model {
     public String getNama() { return nama; }
     public int getHarga() { return harga; }
 }
+
+
