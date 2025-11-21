@@ -15,13 +15,110 @@ public class Main {
 		}
 		// mengembalikan nilai y
 		return pilihanUser.equalsIgnoreCase("y");
-	} 
+	}
+	
+	public static void listProducts(Product productModel) {
+
+	    List<Product> allProducts = productModel.all();
+
+	    System.out.println("\n====================== LIST PRODUCT ======================");
+	    System.out.printf("%-15s %-25s %-10s%n", "Kode Product", "Nama Product", "Harga");
+	    System.out.println("-----------------------------------------------------------");
+
+	    if (allProducts.isEmpty()) {
+	        System.out.println("Tidak ada data.");
+	    } else {
+	        for (Product p : allProducts) {
+	            System.out.printf("%-15s %-25s %-10s%n",
+	                    p.getKode(),
+	                    p.getNama(),
+	                    p.getHarga()
+	            );
+	        }
+	    }
+
+	    System.out.println("===========================================================\n");
+	}
+	
+	public static void createProduct(Product productModel, Scanner input) {
+	    System.out.print("Masukkan kode: ");
+	    String kode = input.next();
+
+	    System.out.print("Masukkan nama: ");
+	    String nama = input.next();
+
+	    System.out.print("Masukkan harga: ");
+	    int harga = Integer.parseInt(input.next());
+
+	    Product p = new Product(kode, nama, harga);
+
+	    productModel.create(p);
+
+	    System.out.println("Produk berhasil ditambahkan.");
+	}
+	
+	public static void updateProduct(Product productModel, Scanner input) {
+	    System.out.print("Masukkan kode yang akan diubah: ");
+	    String kode = input.nextLine();
+
+	    System.out.print("Nama baru: ");
+	    String nama = input.nextLine();
+
+	    System.out.print("Harga baru: ");
+	    int harga = Integer.parseInt(input.nextLine());
+
+	    Product p = new Product(kode, nama, harga);
+
+	    productModel.update(p);
+
+	    System.out.println("Produk berhasil diupdate.");
+	}
+	
+	public static void deleteProduct(Product productModel, Scanner input) {
+	    System.out.print("Masukkan kode yang akan dihapus: ");
+	    String kode = input.nextLine();
+
+	    boolean deleted = productModel.delete(kode);
+
+	    if (deleted)
+	        System.out.println("Produk berhasil dihapus.");
+	    else
+	        System.out.println("Produk tidak ditemukan.");
+	}
+	
+	public static void findProduct(Product productModel, Scanner input) {
+	    System.out.println("\n=== CARI PRODUK ===");
+
+	    System.out.print("Masukkan kode produk: ");
+	    String kodeCari = input.nextLine();
+
+	    Product product = productModel.find(kodeCari);
+
+	    if (product != null) {
+
+	        System.out.println("\n====================== HASIL PENCARIAN ======================");
+	        System.out.printf("%-15s %-25s %-10s%n", "Kode Product", "Nama Product", "Harga");
+	        System.out.println("-------------------------------------------------------------");
+
+	        System.out.printf("%-15s %-25s %-10s%n",
+	        		product.getKode(),
+	        		product.getNama(),
+	        		product.getHarga()
+	        );
+
+	        System.out.println("==============================================================\n");
+
+	    } else {
+	        System.out.println("Produk tidak ditemukan.");
+	    }
+	}
+
 	public static void main(String[] args) {
 
 	    Scanner terminalInput = new Scanner(System.in);
 	    boolean isLanjutkan = true;
 
-	    Product productModel = new Product(); // seperti Laravel Model
+	    Product productModel = new Product(); 
 
 	    System.out.println("==== Aplikasi Kasir berbasis Desktop ====");
 
@@ -41,89 +138,24 @@ public class Main {
 	        switch (jawaban) {
 
 	        case "1": 
-	            System.out.println("\n=== LIST PRODUK ===");
-
-	            List<Product> allProducts = productModel.all();
-	            if (allProducts.isEmpty()) {
-	                System.out.println("Tidak ada data.");
-	            } else {
-	                for (Product p : allProducts) {
-	                    System.out.println(p.getKode() + " | " + p.getNama() + " | " + p.getHarga());
-	                }
-	            }
-	            break;
+	        	listProducts(productModel);
+            break;
 
 	        case "2":
-	            System.out.println("\n=== CARI PRODUK ===");
-
-	            System.out.print("Masukkan kode produk: ");
-	            String kodeCari = terminalInput.next();
-
-	            Product hasil = productModel.find(kodeCari);
-
-	            if (hasil != null) {
-	                System.out.println("Ditemukan:");
-	                System.out.println(hasil.getKode() + " | " + hasil.getNama() + " | " + hasil.getHarga());
-	            } else {
-	                System.out.println("Produk tidak ditemukan.");
-	            }
-	            break;
+	        	findProduct(productModel, terminalInput);
+            break;
 
 	        case "3":
-	            System.out.println("\n=== TAMBAH PRODUK ===");
-	            System.out.print("Kode: ");
-	            String k = terminalInput.next();
-
-	            System.out.print("Nama: ");
-	            String n = terminalInput.next();
-
-	            System.out.print("Harga: ");
-	            int h = terminalInput.nextInt();
-
-	            Product baru = new Product(k, n, h);
-	            productModel.create(baru);
-
-	            System.out.println("Berhasil menambah data.");
-	            break;
+	        	createProduct(productModel, terminalInput);
+            break;
 
 	        case "4":
-	            System.out.println("\n=== UBAH PRODUK ===");
-
-	            System.out.print("Kode produk yang diubah: ");
-	            String kodeUbah = terminalInput.next();
-
-	            Product beforeUpdate = productModel.find(kodeUbah);
-	            if (beforeUpdate == null) {
-	                System.out.println("Produk tidak ditemukan.");
-	                break;
-	            }
-
-	            System.out.print("Nama baru: ");
-	            String namaBaru = terminalInput.next();
-
-	            System.out.print("Harga baru: ");
-	            int hargaBaru = terminalInput.nextInt();
-
-	            Product updated = new Product(kodeUbah, namaBaru, hargaBaru);
-	            productModel.update(updated);
-
-	            System.out.println("Data berhasil diubah.");
-	            break;
+	        	updateProduct(productModel, terminalInput);
+            break;
 
 	        case "5":
-	            System.out.println("\n=== HAPUS PRODUK ===");
-
-	            System.out.print("Kode produk yang dihapus: ");
-	            String kodeHapus = terminalInput.next();
-
-	            boolean deleted = productModel.delete(kodeHapus);
-
-	            if (deleted) {
-	                System.out.println("Produk berhasil dihapus.");
-	            } else {
-	                System.out.println("Produk tidak ditemukan.");
-	            }
-	            break;
+	        	deleteProduct(productModel,terminalInput);
+            break;
 
 	        default:
 	            System.out.println("Pilihan tidak valid.");

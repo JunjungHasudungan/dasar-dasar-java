@@ -50,7 +50,7 @@ public class Product extends Model {
         return null;
     }
 
-    // update mirip Laravel
+    // update 
     public boolean update(Product p) {
         List<String> dataList = readAll();
         boolean found = false;
